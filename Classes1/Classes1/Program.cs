@@ -8,15 +8,28 @@ namespace Classes1
     {
         public static async Task Main(string[] args)
         {
+            Console.Write("Enter the page address:");
             var url = Console.ReadLine();
-            
-            var httpClient = new HttpClient();
-            var content = await httpClient.GetStringAsync(url);
+
+            try
+            {
+                var httpClient = new HttpClient();
+                var content = await httpClient.GetStringAsync(url);
+                string results = string.Join(", ", ExtractEmails(content));
+
+                if (results.Equals(""))
+                    results = "No email adresses on the page !";
+                
+                Console.WriteLine(results);
+                
+                httpClient.Dispose();
+            }
+            catch (System.InvalidOperationException)
+            {
+                Console.WriteLine("Incorrect url address !");
+            }
             
             //Console.WriteLine(content);
-
-            string results = string.Join(", ", ExtractEmails(content));
-            Console.WriteLine(results);
         }
         
         public static string[] ExtractEmails(string str)
