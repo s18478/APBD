@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Classes3.DAL;
 using Classes3.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +10,25 @@ namespace Classes3.Controllers
     [Route("api/students")]
     public class StudentsController : ControllerBase
     {
+        private readonly IDbService _dbService;
+
+        public StudentsController(IDbService dbService)
+        {
+            _dbService = dbService;
+        }
+        
+        // Using artificial database
+        [HttpGet]
+        public IActionResult GetStudents([FromQuery] string orderBy)
+        {
+            if (orderBy == "lastName")
+            {
+                return Ok(_dbService.GetStudents().OrderBy(s => s.LastName));
+            }
+            
+            return Ok(_dbService.GetStudents());
+        }
+        
         /*
         [HttpGet]
         public string GetStudents()
@@ -16,12 +37,13 @@ namespace Classes3.Controllers
         }
         */
 
-        // QueryString
+        /* QueryString
         [HttpGet]
         public string GetStudents(string orderBy)
         {
             return $"Kowalski, Malewski, Andrzejewski, order by = {orderBy}";
         }
+        */
         
         // URL segment
         [HttpGet("{id}")]
