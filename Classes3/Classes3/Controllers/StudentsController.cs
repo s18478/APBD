@@ -6,10 +6,19 @@ namespace Classes3.Controllers
     [Route("api/students")]
     public class StudentsController : ControllerBase
     {
+        /*
         [HttpGet]
         public string GetStudents()
         {
             return "Kowalski, Malewski, Andrzejewski";
+        }
+        */
+
+        // QueryString
+        [HttpGet]
+        public string GetStudents(string orderBy)
+        {
+            return $"Kowalski, Malewski, Andrzejewski, order by = {orderBy}";
         }
         
         // URL segment
