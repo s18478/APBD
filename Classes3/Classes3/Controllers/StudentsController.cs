@@ -1,3 +1,5 @@
+using System;
+using Classes3.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Classes3.Controllers
@@ -35,6 +37,15 @@ namespace Classes3.Controllers
             }
 
             return NotFound("Student was not found");
+        }
+
+        [HttpPost]
+        public IActionResult CreateStudent(Student student)
+        {
+            // Add student with random index to database
+            student.IndexNumber = $"s{new Random().Next(1, 20000)}";
+
+            return Ok(student);
         }
     }
 }
