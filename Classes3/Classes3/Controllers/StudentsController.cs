@@ -24,7 +24,6 @@ namespace Classes3.Controllers
         }
         
         // URL segment
-
         [HttpGet("{id}")]
         public IActionResult GetStudent(int id)
         {
@@ -46,6 +45,21 @@ namespace Classes3.Controllers
             student.IndexNumber = $"s{new Random().Next(1, 20000)}";
 
             return Ok(student);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStudent(int id)
+        {
+            if (id > 0 && id < 20000)
+                return Ok("Update successful");
+            
+            return NotFound("Student was not found");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStudent(int id)
+        {
+            return Ok($"Student {id} deleted");
         }
     }
 }
