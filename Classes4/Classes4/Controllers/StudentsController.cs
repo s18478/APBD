@@ -40,7 +40,10 @@ namespace Classes4.Controllers
             }
             return Ok(list);
         }
-
+        
+        // SQLInjection
+        // http://localhost:5000/api/students/s2002');DROP TABLE Student;--
+        
         [HttpGet("{indexNumber}")]
         public IActionResult GetStudent(string indexNumber)
         {
@@ -49,9 +52,10 @@ namespace Classes4.Controllers
             {
                 command.Connection = connection;
                 command.CommandText = "SELECT * FROM Enrollment WHERE IdEnrollment = " +
-                                        "(SELECT IdEnrollment FROM Student " +
-                                            "WHERE IndexNumber = '" + indexNumber + "')";
-                
+                                      "(SELECT IdEnrollment FROM Student " +
+                                      "WHERE IndexNumber = @indexNumber)";
+                command.Parameters.AddWithValue("indexNumber", indexNumber);
+
                 connection.Open();
                 var sdr = command.ExecuteReader();
 
