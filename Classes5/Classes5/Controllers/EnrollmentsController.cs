@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Data.SqlClient;
 using Classes5.Models;
 using Classes5.Models.DTOs.Requests;
@@ -119,6 +120,58 @@ namespace Classes5.Controllers
             
             // If everything is okay return code 201 and enrollment 
             return Created(enrollment.ToString(), enrollment);
+        }
+
+        [Route("promotions")]
+        [HttpPost]
+        public IActionResult PromoteStudents(PromoteStudentRequest request)
+        {
+            using (var conn = new SqlConnection(connecionString))
+            using (var comm = new SqlCommand())
+            {
+                conn.Open();
+                comm.Connection = conn;
+                
+                // Does the studies and semester exist ?
+                comm.CommandText = "SELECT IdEnrollment FROM Enrollment " +
+                                   "INNER JOIN Studies ON Enrollment.IdStudy = Studies.IdStudy " +
+                                   "WHERE Name = @Studies AND Semester = @Semester;";
+                comm.Parameters.AddWithValue("Studies", request.Studies);
+                comm.Parameters.AddWithValue("Semester", request.Semester);
+                
+                var sdr = comm.ExecuteReader();
+
+                if (!sdr.Read())
+                {
+                    return NotFound("Incorrect studies or semester!");
+                }
+
+                // Run procedure
+                comm.CommandText = "promoteStudents"; 
+                comm.CommandType = CommandType.StoredProcedure;
+                sdr.Close(); 
+                comm.ExecuteNonQuery();
+                    
+                //Get the final enrollment
+                comm.CommandText = "SELECT IdEnrollment, Semester, Enrollment.IdStudy, StartDate FROM Enrollment " +
+                                       "INNER JOIN Studies ON Enrollment.IdStudy = Studies.IdStudy " +
+                                       "WHERE Name = @Studies AND Semester = @newSemester;"; 
+                comm.CommandType = CommandType.Text; 
+                comm.Parameters.AddWithValue("newSemester", request.Semester + 1); 
+                sdr = comm.ExecuteReader();
+                
+                if (sdr.Read()) 
+                { 
+                    Enrollment enrollment = new Enrollment(); 
+                    enrollment.IdEnrollment = (int) sdr["IdEnrollment"];
+                    enrollment.Semester = (int) sdr["Semester"];
+                    enrollment.IdStudy = (int) sdr["IdStudy"];
+                    enrollment.StartDate = (DateTime) sdr["StartDate"];
+                    
+                    return Created(enrollment.ToString(), enrollment);   
+                }
+                return Problem();
+            }
         }
     }
 }
