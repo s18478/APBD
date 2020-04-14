@@ -1,0 +1,32 @@
+
+Logging info: 15.04.2020 00:37:12
+Path: /api/students
+Method: GET
+Query string: 
+Body:
+
+
+Logging info: 15.04.2020 00:37:12
+Path: /favicon.ico
+Method: GET
+Query string: 
+Body:
+
+
+Logging info: 15.04.2020 00:37:44
+Path: /api/students
+Method: POST
+Query string: ?nazwisko=Nowak
+Body:
+{
+	"FirstName": "Andrzej"
+}
+
+Logging info: 15.04.2020 00:37:50
+Path: /api/students
+Method: GET
+Query string: ?nazwisko=Nowak
+Body:
+{
+	"FirstName": "Andrzej"
+}
