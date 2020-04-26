@@ -1,14 +1,26 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Classes7.Controllers
 {
     [ApiController]
     [Route("api/enrollments")]
+    [Authorize(Roles = "employee")]
     public class EnrollmentsController : ControllerBase
     {
-        public IActionResult GetEnrollments()
+        // For testing role: "employee"
+        
+        [HttpGet]
+        public IActionResult EnrollStudent()
         {
-            return Ok("Get enrollments");
+            return Ok("Successfully student enrollment !");
+        }
+
+        [HttpGet]
+        [Route("promotions")]
+        public IActionResult PromoteStudents()
+        {
+            return Ok("Successfully promoting students !");
         }
     }
 }
