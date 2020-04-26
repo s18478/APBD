@@ -1,10 +1,12 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Classes7.Models;
 using Classes7.Models.DTOs;
 using Classes7.Services;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -41,7 +43,7 @@ namespace Classes7.Controllers
                 return NotFound("Index number not found !");
             }
 
-            if (!request.Password.Equals(student.Password))
+            if (!Validate(request.Password, student.Salt, student.Password))
             {
                 return Unauthorized("Incorrect password !");
             }
@@ -55,27 +57,22 @@ namespace Classes7.Controllers
                 refreshToken
             });
         }
+        
+        public bool Validate(string value, string salt, string hashedPassword)
+            => CreateHash(value, salt) == hashedPassword;
 
-        [HttpGet("refresh-token/{refreshToken}")]
-        public IActionResult RefreshToken(string refreshToken)
+        public string CreateHash(string value, string salt)
         {
-            Student student = _service.GetStudentByRefreshToken(refreshToken);
+            var valueBytes = KeyDerivation.Pbkdf2(
+                password: value,
+                salt: Encoding.UTF8.GetBytes(salt),
+                prf: KeyDerivationPrf.HMACSHA512,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8);
 
-            if (student == null)
-            {
-                return NotFound("Refresh token not found !");
-            }
-            
-            string accessToken = GenerateAccessToken(student);
-            string newRefreshToken = GenerateAndSaveRefreshToken(student.IndexNumber);
-            
-            return Ok(new
-            {
-                accessToken,    
-                newRefreshToken
-            });
+            return Convert.ToBase64String(valueBytes);
         }
-
+        
         public string GenerateAccessToken(Student student)
         {
             var claims = new[]
@@ -108,6 +105,39 @@ namespace Classes7.Controllers
             _service.SaveRefreshToken(indexNumber, refreshToken);
 
             return refreshToken;
+        }
+        
+        [HttpGet("refresh-token/{refreshToken}")]
+        public IActionResult RefreshToken(string refreshToken)
+        {
+            Student student = _service.GetStudentByRefreshToken(refreshToken);
+
+            if (student == null)
+            {
+                return NotFound("Refresh token not found !");
+            }
+            
+            string accessToken = GenerateAccessToken(student);
+            string newRefreshToken = GenerateAndSaveRefreshToken(student.IndexNumber);
+            
+            return Ok(new
+            {
+                accessToken,    
+                newRefreshToken
+            });
+        }
+        
+        // Auxiliary endpoint to create example salt
+        [HttpGet("salt")]
+        public IActionResult CreateSalt()
+        {
+            byte[] randomBytes = new byte[128 / 8];
+
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                generator.GetBytes(randomBytes);
+                return Ok(Convert.ToBase64String(randomBytes));
+            }
         }
     }
 }

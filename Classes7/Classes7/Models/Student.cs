@@ -9,5 +9,7 @@ namespace Classes7.Models
         public string LastName { get; set; }
         
         public string Password { get; set; }
+        
+        public string Salt { get; set; }
     }
 }

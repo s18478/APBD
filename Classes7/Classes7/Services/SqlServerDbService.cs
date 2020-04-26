@@ -18,7 +18,7 @@ namespace Classes7.Services
                 conn.Open();
                 comm.Connection = conn;
 
-                comm.CommandText = "SELECT IndexNumber, FirstName, LastName, Password " +
+                comm.CommandText = "SELECT IndexNumber, FirstName, LastName, Password, Salt " +
                                    "FROM Student WHERE IndexNumber = @index";
                 comm.Parameters.AddWithValue("index", index);
 
@@ -53,7 +53,7 @@ namespace Classes7.Services
                 conn.Open();
                 comm.Connection = conn;
                 
-                comm.CommandText = "SELECT IndexNumber, FirstName, LastName, Password " +
+                comm.CommandText = "SELECT IndexNumber, FirstName, LastName, Password, Salt " +
                                    "FROM Student WHERE RefreshToken = @refreshToken";
                 comm.Parameters.AddWithValue("refreshToken", refreshToken);
 
@@ -76,7 +76,8 @@ namespace Classes7.Services
             student.FirstName = reader["FirstName"].ToString();
             student.LastName = reader["LastName"].ToString();
             student.Password = reader["Password"].ToString();
-
+            student.Salt = reader["Salt"].ToString();
+            
             return student;
         }
     }
