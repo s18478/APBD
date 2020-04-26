@@ -46,6 +46,38 @@ namespace Classes7.Controllers
                 return Unauthorized("Incorrect password !");
             }
 
+            string accessToken = GenerateAccessToken(student);
+            string refreshToken = GenerateAndSaveRefreshToken(student.IndexNumber);
+            
+            return Ok(new
+            {
+                accessToken,    
+                refreshToken
+            });
+        }
+
+        [HttpGet("refresh-token/{refreshToken}")]
+        public IActionResult RefreshToken(string refreshToken)
+        {
+            Student student = _service.GetStudentByRefreshToken(refreshToken);
+
+            if (student == null)
+            {
+                return NotFound("Refresh token not found !");
+            }
+            
+            string accessToken = GenerateAccessToken(student);
+            string newRefreshToken = GenerateAndSaveRefreshToken(student.IndexNumber);
+            
+            return Ok(new
+            {
+                accessToken,    
+                newRefreshToken
+            });
+        }
+
+        public string GenerateAccessToken(Student student)
+        {
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, student.IndexNumber),
@@ -65,12 +97,17 @@ namespace Classes7.Controllers
                 expires: DateTime.Now.AddMinutes(10),
                 signingCredentials: creds
             );
+            
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
-            return Ok(new
-            {
-                accessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                refreshToken = Guid.NewGuid()
-            });
+        public string GenerateAndSaveRefreshToken(string indexNumber)
+        {
+            var refreshToken = Guid.NewGuid().ToString();
+            
+            _service.SaveRefreshToken(indexNumber, refreshToken);
+
+            return refreshToken;
         }
     }
 }
