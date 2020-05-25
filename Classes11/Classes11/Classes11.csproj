@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models" />
+    <Folder Include="Configurations" />
     <Folder Include="Services" />
   </ItemGroup>
 </Project>
