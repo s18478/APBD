@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Classes11.Configurations
 {
-    public class PrescriptionEfConfiguration : IEntityTypeConfiguration<Prescription>
+    public class PrescriptionEfConfig : IEntityTypeConfiguration<Prescription>
     {
         public void Configure(EntityTypeBuilder<Prescription> builder)
         {

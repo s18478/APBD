@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Classes11.Configurations
 {
-    public class PatientEfConfiguration : IEntityTypeConfiguration<Patient>
+    public class PatientEfConfig : IEntityTypeConfiguration<Patient>
     {
         public void Configure(EntityTypeBuilder<Patient> builder)
         {

@@ -22,10 +22,10 @@ namespace Classes11.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new DoctorEfConfiguration());
-            modelBuilder.ApplyConfiguration(new PrescriptionEfConfiguration());
-            modelBuilder.ApplyConfiguration(new PatientEfConfiguration());
-            modelBuilder.ApplyConfiguration(new MedicamentEfConfiguration());
+            modelBuilder.ApplyConfiguration(new DoctorEfConfig());
+            modelBuilder.ApplyConfiguration(new PrescriptionEfConfig());
+            modelBuilder.ApplyConfiguration(new PatientEfConfig());
+            modelBuilder.ApplyConfiguration(new MedicamentEfConfig());
             modelBuilder.ApplyConfiguration(new PrescriptionMedicamentEfConfig());
         }
     }
