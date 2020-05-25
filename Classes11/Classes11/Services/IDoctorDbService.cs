@@ -8,8 +8,8 @@ namespace Classes11.Services
     public interface IDoctorDbService
     {
         public IEnumerable<Doctor> GetDoctors();
-        public Doctor CreateDoctor(CreateDoctorRequest request);
-        public Doctor UpdateDoctor();
+        public Doctor CreateDoctor(CreateOrUpdateDoctorRequest request);
+        public Doctor UpdateDoctor(int id, CreateOrUpdateDoctorRequest request);
         public bool DeleteDoctor();
     }
 }

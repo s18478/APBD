@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Classes11.Models.DTOs
 {
-    public class CreateDoctorRequest
+    public class CreateOrUpdateDoctorRequest
     {
         [Required]
         public string FirstName { get; set; }

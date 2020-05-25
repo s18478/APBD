@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Classes11.Models;
 using Classes11.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Classes11.Services
 {
@@ -19,7 +21,7 @@ namespace Classes11.Services
             return _context.Doctors.ToList();
         }
 
-        public Doctor CreateDoctor(CreateDoctorRequest request)
+        public Doctor CreateDoctor(CreateOrUpdateDoctorRequest request)
         {
             Doctor doctor = new Doctor
             {
@@ -34,9 +36,28 @@ namespace Classes11.Services
             return doctor;
         }
 
-        public Doctor UpdateDoctor()
+        public Doctor UpdateDoctor(int id, CreateOrUpdateDoctorRequest request)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine(id);
+            if (_context.Doctors.Any(d => d.IdDoctor == id))
+            {
+                Console.WriteLine("Exist");
+                Doctor doctor = new Doctor
+                {
+                    IdDoctor = id,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email
+                };
+
+                _context.Attach(doctor);
+                _context.Entry(doctor).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return doctor;
+            }
+            Console.WriteLine("Not exist");
+            throw new Exception("Doctor not found.");
         }
 
         public bool DeleteDoctor()
