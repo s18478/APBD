@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Classes11.Models
 {
@@ -11,6 +12,6 @@ namespace Classes11.Models
         public virtual Doctor Doctor { get; set; }
         public int IdPatient { get; set; }
         public virtual Patient Patient { get; set; }
-        
+        public virtual ICollection<PrescriptionMedicament> PrescriptionMedicament { get; set; }
     }
 }
