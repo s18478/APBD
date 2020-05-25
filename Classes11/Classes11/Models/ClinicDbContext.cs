@@ -6,6 +6,8 @@ namespace Classes11.Models
     public class ClinicDbContext : DbContext
     {
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<Patient> Patients { get; set; }
         protected ClinicDbContext()
         {
         }
@@ -19,6 +21,8 @@ namespace Classes11.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new DoctorEfConfiguration());
+            modelBuilder.ApplyConfiguration(new PrescriptionEfConfiguration());
+            modelBuilder.ApplyConfiguration(new PatientEfConfiguration());
         }
     }
 }
