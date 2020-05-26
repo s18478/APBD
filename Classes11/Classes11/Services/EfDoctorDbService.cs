@@ -60,9 +60,19 @@ namespace Classes11.Services
             throw new Exception("Doctor not found.");
         }
 
-        public bool DeleteDoctor()
+        public bool DeleteDoctor(int id)
         {
-            throw new System.NotImplementedException();
+            Doctor doctor = _context.Doctors.Find(id);
+            
+            if (doctor != null)
+            {
+                _context.Remove(doctor);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

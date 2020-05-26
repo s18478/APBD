@@ -10,6 +10,6 @@ namespace Classes11.Services
         public IEnumerable<Doctor> GetDoctors();
         public Doctor CreateDoctor(CreateOrUpdateDoctorRequest request);
         public Doctor UpdateDoctor(int id, CreateOrUpdateDoctorRequest request);
-        public bool DeleteDoctor();
+        public bool DeleteDoctor(int id);
     }
 }

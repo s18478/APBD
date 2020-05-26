@@ -40,5 +40,16 @@ namespace Classes11.Controllers
                 return Problem(e.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDoctor(int id)
+        {
+            if (_service.DeleteDoctor(id))
+            {
+                return Ok("Doctor deleted.");
+            }
+
+            return Problem("Deletion failed.");
+        }
     }
 }
